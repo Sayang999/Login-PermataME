@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <title>Permata Bank - Selamat Datang</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #003366;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            padding-top: 90px;
+            box-sizing: border-box;
+            
+        }
+
+        .container {
+            background-color: #003366;
+            padding: 30px;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 400px;
+            text-align: left;
+            align-items: center;
+        }
+
+        p {
+            font-size: 25px;
+            margin-bottom: 30px;
+            color: #ffffff;
+            text-align: left;
+            font-weight: 500px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 12px;
+            padding: 10px 10px;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="password"] {
+            width: calc(100% - 10px);
+            padding: 10px 10px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #fff;
+            color: #fff;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .form-group input::placeholder {
+            color: rgba(255,255,255,0.7);
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 0;
+            bottom: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            padding-right: 10px;
+        }
+
+        .captcha-group {
+            display: flex;
+            align-items: flex-end;
+            margin-bottom: 10px;
+        }
+
+        .captcha-group .form-group {
+            flex-grow: 1;
+            margin-bottom: 0;
+            margin-right: 10px;
+        }
+
+        .captcha-display {
+            background: #333;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 18px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            user-select: none;
+        }
+
+        .change-captcha {
+            color: #fff;
+            text-decoration: none;
+            font-size: 14px;
+            margin-left: 10px;
+            white-space: nowrap;
+        }
+
+        .login-button {
+            width: 40%;
+            padding: 10px;
+            background: #007bff;
+            border: none;
+            border-radius: 25px;
+            color: #fff;
+            font-size: 17px;
+            cursor: pointer;
+            margin-top: 25px;
+            transition: background 0.3s;
+        }
+
+        .login-button:hover {
+            background: #0056b3;
+        }
+
+        .links {
+            margin-top: 30px;
+            font-size: 12px;
+            text-align: left;
+        }
+
+        .links a {
+            display: block;
+            color: #fff;
+            text-decoration: none;
+            margin-bottom: 15px;
+        }
+
+        .links a:hover {
+            text-decoration: underline;
+        }
+
+        /* Halaman PIN */
+        .pin-container {
+            display: none;
+            text-align: center;
+        }
+
+        .pin-input-group {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .pin-input-group input {
+            width: 40px;
+            height: 40px;
+            margin: 0 5px;
+            text-align: center;
+            font-size: 20px;
+            border: 1px solid #fff;
+            background: transparent;
+            color: #fff;
+            border-radius: 5px;
+            outline: none;
+            -webkit-text-security: disc;
+            text-security: disc;
+        }
+
+        /* Halaman Ketiga */
+        .page3-container {
+            display: none;
+            text-align: left;
+            background: #34495e;
+            padding: 20px;
+            border-radius: 10px;
+            position: relative;
+            margin: 20px;
+        }
+
+        .page3-container h1 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .page3-container p {
+            margin-bottom: 30px;
+            font-size: 14px;
+            text-align: left;
+            font-weight: lighter;
+        }
+
+        .timer {
+            font-size: 1em;
+            margin-bottom: 20px;
+            font-weight: normal;
+        }
+
+        .resend-button {
+            background: #3498db;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .resend-button:hover {
+            background: #2980b9;
+        }
+
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.5em;
+            cursor: pointer;
+        }
+
+        .phone-image {
+            width: 100px;
+            margin-bottom: 10px;
+            text-align: left;
+        }
+        .header {
+            background-color: #003366;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            box-sizing: border-box;
+            align-items: center;
+            width: 100%;
+            position: fixed;
+            z-index: 100;
+            top: 0;
+            left: 0;
+            color: #fff;
+            box-shadow: 0px 2px rgba(0,0,0,0,1);
+        }
+        
+        .menu-icon-label {
+            display: inline-block;
+            cursor: pointer;
+            margin: 0 10px;
+        }
+        .menu-icon {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            width: 25px;
+            height: 20px;
+            cursor: pointer;
+            padding: 5px;
+        }
+        .menu-icon span {
+            display: block;
+            height: 2px;
+            background-color: white;
+            transition: all 0.3s ease;
+        }
+        .menu-icon span:nth-child(1) {
+            width: 100%;
+        }
+        .menu-icon span:nth-child(2) {
+            width: 70%;
+        }
+        .menu-icon span:nth-child(3) {
+            width: 40%;
+        }
+        #menu-toggle {
+            display: none;
+        }
+        #menu-position-toggle {
+            display: none;
+        }
+        #menu-position-toggle:checked ~ .header .menu-icon-label {
+            left: right;
+        }
+        .sidebar {
+            height: 100%;
+            width: 0;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            right: 0;
+            background-color: #112240;
+            overflow-x: hidden;
+            transition: 0.5s;
+            padding-top: 60px;
+            color: #fff;
+            text-align: left;
+        }
+        .sidebar a {
+            padding: 8px 32px 8px 16px;
+            text-decoration: none;
+            font-size: 18px;
+            color: #818181;
+            display: block;
+            transition: 0.3s;
+        }
+        .sidebar a:hover {
+            color: #f1f1f1;
+        }
+        .sidebar .closebtn {
+            position: absolute;
+            top: 0;
+            left: 25px;
+            font-size: 36px;
+            cursor: pointer;
+        }
+        .main-content {
+            transition: margin-right .5s;
+            padding: 16px;
+            margin-right: 0;
+            padding-top: 70px;
+        }
+        @media screen and (max-height: 450px){
+            .sidebar {padding-top: 15px;}
+            .sidebar a {font-size: 16px;}
+        }
+        .menu-item {
+            padding: 10px 16px;
+            border-bottom: 1px solid #2D3748;
+        }
+        .menu-item:last-child {
+            border-bottom: none;
+        }
+        .language-selector {
+            padding: 10px 16px;
+            border-bottom: 1px solid #2D3748;
+        }
+        .language-selector select {
+            background-color: transparent;
+            color: #fff;
+            border: none;
+            font-size: 16px;
+            padding: 5px;
+            cursor: pointer;
+        }
+        .language-selector select option {
+            background-color: #112240;
+            color: #fff;
+        }
+        #menu-toggle:checked ~ .sidebar {
+            width: 250px;
+        }
+        #menu-toggle:checked ~ .main-content {
+            margin-right: 250px;
+        }
+        #menu-toggle:not(:checked) ~ .sidebar .closebtn {
+            display: none;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        .pin-container h1 {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        .header .logo img {
+            width: 7.875rem;
+        }
+    </style>
+</head>
+<body>
+    <input type="checkbox" id="menu-toggle">
+    <input type="checkbox" id="menu-position-toggle">
+    
+    <div class="header">
+        <div class="logo">
+            <img src="permata-logo.png" alt="Permata Bank">
+        </div>
+        <label for="menu-toggle" class="menu-icon-label">
+            <div class="menu-icon">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>            
+        </label>
+    </div>
+    <div id="mySidebar" class="sidebar">
+        <label for="menu-toggle" class="closebtn">×</label>
+        <div class="language-selector">
+            <select>
+                <option>ID</option>
+                <option>EN</option>
+            </select>
+        </div>
+        <div class="menu-item"><a href="#">PERMATA STORE</a></div>
+        <div class="menu-item"><a href="#">FAQ</a></div>
+        <div class="menu-item"><a href="#">HUBUNGI KAMI</a></div>
+    </div>
+    
+    <!-- Halaman 1: Login -->
+    <div class="container" id="loginPage">
+        <div class="logo">
+            
+        </div>
+        <h2>Selamat Datang di Permata Net</h2>
+        <br>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="userID">User ID</label>
+                <input type="text" id="userID" placeholder="Ketik User ID" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Ketik Password" required>
+                <span class="password-toggle" id="togglePassword"><i class="fas fa-eye"></i></span>
+            </div>
+
+            <div class="captcha-group">
+                <div class="form-group">
+                    <label for="captchaInput">Masukkan kode Captcha</label>
+                    <input type="text" id="captchaInput" placeholder="Masukkan Kode" required>
+                </div>
+                <span class="captcha-display" id="captchaDisplay"></span>
+                <a href="#" class="change-captcha" id="changeCaptcha">Ganti Kode</a>
+            </div>
+
+            <button type="submit" class="login-button">Login</button>
+
+            <div class="links">
+                <a href="menu.html">Belum punya User ID</a>
+                <a href="menu.html">Saya lupa User ID atau Password</a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Halaman 2: PIN -->
+    <div class="container pin-container" id="pinPage">
+        <h1>Masukkan PIN</h1>
+        <div class="pin-input-group">
+            <input type="password" maxlength="1" class="pin-input" required>
+            <input type="password" maxlength="1" class="pin-input" required>
+            <input type="password" maxlength="1" class="pin-input" required>
+            <input type="password" maxlength="1" class="pin-input" required>
+            <input type="password" maxlength="1" class="pin-input" required>
+            <input type="password" maxlength="1" class="pin-input" required>
+        </div>
+    </div>
+
+    <!-- Halaman 3: Konfirmasi Otentikasi -->
+    <div class="container page3-container" id="page3">
+        <button class="close-button" onclick="closePage3()">&times;</button>
+        <img src="authentication-illustration.svg" alt="Phone" class="phone-image">
+        <p>Pesan otentikasi telah dikirimkan ke Aplikasi Permata ME kamu.</p>
+        <p>Login aplikasi Permata ME untuk konfirmasi melanjutkan aktivitas ini.</p>
+        <div class="timer" id="timer">Waktu Tersisa: 2:00</div>
+        <p><b>Tidak menerima notifikasi otentikasi?</b></p>
+        <button class="resend-button" onclick="resendAuthentication()">Kirim Ulang</button>
+    </div>
+
+    <!-- Panggil file script.js -->
+    <script src="script.js"></script>
+</body>
+</html>

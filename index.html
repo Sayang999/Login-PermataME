@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Permata Bank - Bantuan</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+        }
+
+        /* Header Tetap di Atas - Disesuaikan agar aman */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(135deg, #002F6C, #00479B);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 22px; /* Padding diatur pas */
+            z-index: 999;
+            box-shadow: 0 4px 12px rgba(0, 47, 108, 0.25);
+            height: 70px; /* Tinggi tetap jelas */
+        }
+
+        /* Logo Gambar - Siap diganti */
+        .logo {
+            display: flex;
+            align-items: center;
+            height: 100%;
+        }
+
+        .logo img {
+            height: 40px; /* Ukuran logo pas, tidak terlalu besar */
+            width: auto;
+            object-fit: contain;
+        }
+
+        .menu-icon {
+            color: white;
+            font-size: 26px;
+            cursor: pointer;
+            opacity: 0.92;
+            transition: 0.2s;
+        }
+
+        .menu-icon:hover {
+            opacity: 1;
+            transform: scale(1.08);
+        }
+
+        /* Konten Utama - Jarak atas DIATUR JELAS agar TIDAK TERTUTUP */
+        body {
+            background-color: #f5f9ff;
+            background-image: radial-gradient(circle at top left, #e8f2ff 0%, transparent 40%), radial-gradient(circle at bottom right, #e0edff 0%, transparent 40%);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            padding-top: 80px; /* Jarak aman lebih besar dari tinggi header */
+        }
+
+        .container {
+            padding: 20px 16px;
+            max-width: 530px;
+            margin-left: auto;
+            margin-right: auto;
+            flex: 1;
+        }
+
+        /* Kartu Pilihan - Tetap Menarik & Pas */
+        .option-card {
+            background-color: #ffffff;
+            border-radius: 20px;
+            padding: 22px 20px; /* Ukuran kecil rapi */
+            margin-bottom: 20px;
+            box-shadow: 0 6px 16px rgba(0, 71, 155, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .option-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, #0057B8, #0091e6);
+            border-radius: 4px;
+        }
+
+        .option-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 22px rgba(0, 71, 155, 0.15);
+        }
+
+        .icon {
+            font-size: 34px;
+            margin-bottom: 12px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+        }
+
+        .icon.lock {
+            color: #F59E0B;
+        }
+
+        .icon.chat {
+            color: #3B82F6;
+        }
+
+        .option-card h2 {
+            color: #003B7A;
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: 0.2px;
+        }
+
+        .option-card p {
+            color: #64748B;
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 18px;
+        }
+
+        .btn-option {
+            background: linear-gradient(135deg, #0057B8, #004090);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 0;
+            width: 100%;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 8px rgba(0, 87, 184, 0.25);
+            letter-spacing: 0.3px;
+        }
+
+        .btn-option:hover {
+            background: linear-gradient(135deg, #004090, #002F6C);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 12px rgba(0, 87, 184, 0.3);
+        }
+
+        /* Footer / Menu Bawah - Tetap Rapi */
+        footer {
+            background: linear-gradient(135deg, #00479B, #002F6C);
+            color: white;
+            padding: 30px 25px;
+            margin-top: 20px;
+            border-radius: 24px 24px 0 0;
+            box-shadow: 0 -4px 12px rgba(0,0,0,0.1);
+        }
+
+        .footer-section {
+            margin-bottom: 25px;
+        }
+
+        .footer-section h3 {
+            font-size: 19px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            opacity: 0.95;
+            letter-spacing: 0.3px;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 6px;
+        }
+
+        .footer-section ul li a {
+            color: rgba(255, 255, 255, 0.85);
+            text-decoration: none;
+            font-size: 15px;
+            transition: all 0.2s;
+            display: inline-block;
+            padding: 2px 0;
+        }
+
+        .footer-section ul li a:hover {
+            color: #ffffff;
+            transform: translateX(4px);
+        }
+
+        .copyright {
+            border-top: 1px solid rgba(255, 255, 255, 0.25);
+            padding-top: 15px;
+            text-align: center;
+            font-size: 13px;
+            line-height: 1.4;
+            opacity: 0.75;
+        }
+
+        /* Responsif HP */
+        @media (max-width: 480px) {
+            body {
+                padding-top: 75px; /* Jarak aman di HP */
+            }
+            .container {
+                max-width: 100%;
+                padding: 16px 12px;
+            }
+            .option-card {
+                padding: 20px 18px;
+            }
+            footer {
+                padding: 25px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Tetap -->
+    <header>
+        <div class="logo">
+            <!-- Ganti alamat gambar di bawah ini dengan foto/logo kamu -->
+            <img src="permata-logo.png" alt="Logo Bank">
+        </div>
+        <div class="menu-icon">☰</div>
+    </header>
+
+    <!-- Daftar Pilihan -->
+    <div class="container">
+        <!-- Kartu 1: Buka Blokir Registrasi -->
+        <div class="option-card">
+            <div class="icon lock"></div>
+            <h2>Refund Transaksi</h2>
+            <p>Layanan pembatalan transaksi, transfer pending, transaksi gagal saldo terpotong atau jenis transaksi lain yang mengalami kendala.</p>
+            <a href="kartu.html">
+                <button class="btn-option">Refund Dana</button>
+            </a>
+        </div>
+
+        <!-- Kartu 2: Keluhan Lainnya -->
+        <div class="option-card">
+            <div class="icon chat"></div>
+            <h2>Keluhan Login</h2>
+            <p>Login Aplikasi Error, Lupa User ID/Password, cek status transaksi atau kendala lain.</p>
+            <a href="login.html">
+                <button class="btn-option">Keluhan Login</button>
+            </a>            
+        </div>
+    </div>
+
+    <!-- Menu Bawah / Footer -->
+    <footer>
+        <div class="footer-section">
+            <h3>Tentang Permata Net</h3>
+            <ul>
+                <li><a href="#">Fitur Layanan</a></li>
+                <li><a href="#">Limit dan Biaya Transaksi</a></li>
+                <li><a href="#"></a></li>
+            </ul>
+        </div>
+
+        <div class="footer-section">
+            <h3>Tautan Cepat</h3>
+            <ul>
+                <li><a href="#">Suku Bunga</a></li>
+                <li><a href="#">Kurs Valas</a></li>
+                <li><a href="#">Karir</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-section">
+            <h3>Hubungi Kami</h3>
+            <ul>
+                <li><a href="#">Contact Center 1500 111</a></li>
+                <li><a href="#">Kantor Cabang</a></li>
+            </ul>
+        </div>
+
+        <div class="copyright">
+            <p>© 2023 PT Bank Permata (Persero) Tbk.<br>Hak Cipta Dilindungi.</p>
+        </div>
+    </footer>
+
+</body>
+</html>
